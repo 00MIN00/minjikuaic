@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>铭记餐厅</title>
+</head>
+<script src="../../static/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+<link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+<script src="../../static/js/bootstrap.min.js"></script>
+<style>
+    ul li {
+        list-style: none;
+        font-size: clamp(0.5rem, 2.6vw, 3rem);
+    }
+
+    #pd-list ul li {
+        font-size: 1.5vw;
+        color: rgb(255, 255, 255);
+    }
+
+    #pd-list ul li ul {
+        /*display: none;*/
+        padding-left: 0px;
+    }
+
+    #pd-list ul li ul li {
+        padding-left: 12px;
+    }
+
+    #shs {
+        width: 10vw;
+    }
+
+    .list-group-item.active {
+        border-color: rgba(0, 0, 0, 0)
+    }
+
+    .list-group-item {
+        border-color: rgba(0, 0, 0, 0)
+    }
+
+    .FoodIngredient input {
+        width: auto;
+        max-width: content-box;
+        height: 1vw;
+    }
+</style>
+<body style="height: 100%">
+<!-- 小屏幕上水平导航栏会切换为垂直的 -->
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark" id="navbar" style="height: 100px;">
+    <img src="/static/img/铭记快餐.png">
+</nav>
+<div class="container-fluid row" id="container-fluid-height " style="padding: 0px 0px 0px 0px;
+height: max-content">
+
+    <div class="col-2" id="shs" style="padding:0px 0px 0px 0px ;
+    height: 100%;background-color:rgba(49,49,49,100)">
+        <div class="pt-1 px-0" id="pd-list">
+            <ul class="list-group  list-group-flush">
+                <li class="list-group-item bg-transparent">
+                    <div><a>菜单管理</a></div>
+                    <ul id="cuisine" style="display: none">
+                        <li>
+                            <a>菜品管理</a>
+                        </li>
+                        <li>
+                            <a>种类管理</a>
+                        </li>
+                        <li>
+                            <a>用户点餐</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-group-item bg-transparent">
+
+                    <div><a>人事管理</a></div>
+                    <ul>
+                        <li>
+                            <a>员工管理</a>
+                        </li>
+                        <li>
+                            <a>薪酬管理</a>
+                        </li>
+                        <li>
+                            <a>出勤管理</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-group-item bg-transparent">
+
+                    <div><a>采购管理</a></div>
+                    <ul>
+                        <li>
+                            <a>公司配送</a>
+                        </li>
+                        <li>
+                            <a>自行采购</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-group-item bg-transparent">
+
+                    <div><a>仓储管理</a></div>
+                    <ul>
+                        <li>
+                            <a>耗材管理</a>
+                        </li>
+                        <li>
+                            <a>报废处理记录</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-group-item bg-transparent">
+
+                    <div><a>财务管理</a></div>
+                    <ul>
+                        <li>
+                            <a>财务统计</a>
+                        </li>
+                        <li>
+                            <a>财务登记</a>
+                        </li>
+                        <li>
+                            <a>财务核验</a>
+                        </li>
+                        <li>
+                            <a style="font-size: 1.5vw">供应商及厨余处理</br>资质登记</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-group-item bg-transparent">
+
+                    <div><a>会员管理</a></div>
+                    <ul>
+                        <li>
+                            <a>会员管理</a>
+                        </li>
+                        <li>
+                            <a>会员积分</a>
+                        </li>
+                        <li>
+                            <a>积分商城</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="col" id="details" style="padding-left:2vw; margin-top: 3vw;">
+        <link href="../../static/css/menus/cuisine.min.css" rel="stylesheet">
+        <script src="../../static/js/util/cuisineUtil.min.js" type="text/javascript"></script>
+        <div class="row">
+            <div class="col-12" style="margin: 10px 0px 1px 1px">
+                <span style="font-size: 28px; height: 40px; font-weight: 500;">菜品管理</span>
+                <div class="row" id="SpeciesZoning">
+
+                </div>
+                <div class="row" id="queryCuisine">
+                    <div class="next-form-item next-left next-medium row">
+                        <div class="col next-form-item-label" style="width: auto">
+                            <label style="width: auto">菜名</label>
+                        </div>
+                        <div class="col next-form-item-control">
+                                        <span class="next-input next-medium" style="width: 200px;">
+                                            <input autocomplete="off" height="100%" name="DishName" placeholder="输入全名"
+                                                   type="text"
+                                                   value="">
+                                        </span>
+                        </div>
+                    </div>
+                    <div class="next-form-item next-left next-medium row">
+                        <div class="col next-form-item-label" style="margin-left: 16px">
+                            <label>食材</label>
+                        </div>
+                        <div class=" colnext-form-item-control">
+                                    <span aria-haspopup="true"
+                                          class="next-select next-select-auto-complete next-size-medium"
+                                          style="width: 200px;">
+                                        <span class="next-input next-medium">
+                                            <input aria-autocomplete="list" autocomplete="off" height="100%"
+                                                   name="FoodIngredient"
+                                                   placeholder="输入全名" role="combobox" value="">
+                                        </span>
+                                        <span aria-live="polite" class="next-sr-only"></span>
+                                    </span>
+                        </div>
+                    </div>
+                    <div class="col next-form-item next-left next-medium" id="queryCuisineButton">
+                        <div class="next-form-item-control">
+                            <button class="next-btn next-medium next-btn-primary"
+                                    data-spm-click="gostr=/aliyun;locaid=dashsearch"
+                                    style="margin-right: 10px;" type="button">
+                                <span class="next-btn-helper">查询</span>
+                            </button>
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        <button class="newCuisine" type="button">
+                            <span>创建菜品</span>
+                        </button>
+                    </div>
+
+                </div>
+                <div style="margin-top: 0.2em">
+                    <!--                    图片 名字 详解 材料   价格 自选 操作-->
+                    <div class="row CuisineBehaviorT">
+                        <div class="col-md-2 ">预览图</div>
+                        <div class="col-8 row"><span>详情</span>
+                        </div>
+                        <div class="col-2 row">
+                            操作
+                        </div>
+                    </div>
+                    <div class="row" id="CuisineBehaviorH" style="overflow:auto;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="modules" style="display: none">
+            <span class='SpeciesFont'>public</span>
+            <span class='SpeciesFontFG' style="color: rgb(153, 153, 153);">|</span>
+            <div class="row CuisineBehavior" style="height: max-content">
+                <div class="Snowflake" style="display: none">snowflake</div>
+                <div class="col-md-2 Preview">预览图</div>
+                <div class="col-8">
+                    <div class="DishName">菜名</div>
+                    <div class="FoodIngredient">材料</div>
+                    <div class="ExplainInDetail">详解</div>
+                    <div class="Craft">制作方法（开发中）</div>
+                </div>
+                <div class="col-2 row order" style="border:hidden">
+                    <div class="col Update">
+                        <button type="button">
+                            <span>更新</span>
+                        </button>
+                    </div>
+                    <div class="col Delete">
+                        <button style="background-color: red" type="button">
+                            <span>删除</span>
+                        </button>
+                    </div>
+                    <div class='col UpdateUP' style="display: none">
+                        <button type='button'>
+                            <span>提交</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="ss">
+
+        </div>
+        <script type="text/javascript" >
+             $(document).ready(function() {
+                $("#queryCuisine").find("div").css("padding", "0px 1px 0px 1px").css("width", "auto")
+                $("#queryCuisine").find("div").find("div").css("padding", "0px 1px 0px 1px").css("width", "auto")
+                let jsonData = GetajaxJSON("/Cuisine/Cuisine/Species", "json", "", "")
+                for (let i in jsonData) {
+                    let divStr = $("#modules").find($(".SpeciesFont")).attr({
+                        href: jsonData[i]["href"],
+                        URL: jsonData[i]["URL"]
+                    }).text(jsonData[i]["ZoningName"])
+                    if (i == 0) {
+                        divStr.css("color", "rgb(32, 155, 250)").attr("id", "01")
+                    } else {
+                        divStr.css("color", "rgb(0,0,0)")
+                    }
+                    $("#SpeciesZoning").append(divStr.clone())
+                    if (Object.keys(jsonData).length - 1 > i) {
+                        $("#SpeciesZoning").append($("#modules").find($(".SpeciesFontFG")).clone())
+                    }
+                }
+                bd($("button[class='next-btn next-medium next-btn-primary']"),
+                    function () {
+                        let jsonDatas = extractionGETData()
+                        getCuisine(jsonDatas)
+                    }
+                )
+                insertCuisineButtonRenewal()
+                SpeciesRenewal()
+                let len = document.getElementById("CuisineBehaviorH").getBoundingClientRect().top
+                len = $(document).innerHeight() - parseInt(len) - 300
+                $("#CuisineBehaviorH").html("").attr({
+                    overflow: "auto",
+                    as: "0"
+                }).css("max-height", len.toString() + "px", "height", "max-content")
+                let jsonDatas = extractionGETData()
+                getCuisine(jsonDatas)
+
+
+            })
+            function SpeciesRenewal() {
+                $(".SpeciesFont").unbind()
+                $(".SpeciesFont").mousedown(function () {
+                    if ($(this).css('color') != 'rgb(32, 155, 250)') {
+                        $(this).css('color', 'rgb(32, 155, 250)').attr("id", "01")
+                    }
+                    if ($(this).css('color') == 'rgb(32, 155, 250)') {
+                        $(this).css('color', 'rgb(32, 155, 250)').attr("id", "01")
+                        $(this).nextAll('.SpeciesFont').css('color', 'rgb(0,0,0)').attr("id", "")
+                        $(this).prevAll('.SpeciesFont').css('color', 'rgb(0,0,0)').attr("id", "")
+                    }
+                    let jsonDatas = extractionGETData()
+                    getCuisine(jsonDatas)
+                })
+
+            }
+
+            function getCuisine(jsonData) {
+                let JSONData = GetajaxJSON("/Cuisine/Cuisine/selectAll", "json", jsonData, "application/json")["CuisineList"]
+                if ($("#CuisineBehaviorH").innerHeight() > 650) {
+                    let len = document.getElementById("CuisineBehaviorH").getBoundingClientRect().top
+                    len = $(document).innerHeight() - parseInt(len) - 300
+                    $("#CuisineBehaviorH").html("").attr({
+                        overflow: "auto",
+                        as: "0"
+                    }).css("max-height", len.toString() + "px", "height", "max-content")
+                }
+                $("#CuisineBehaviorH").html("")
+                let JSONData1 = {}
+                for (var dataKey in JSONData) {
+                    var CuisineBehavior = $("#modules .CuisineBehavior").clone()
+                    $("#CuisineBehaviorH").append(CuisineBehavior)
+                    CuisineBehavior.find(".Preview").html("<img name='Preview' src='/static/img/CuisineImage/" + JSONData[dataKey]["Preview"] + ".jpg?Time=" + (new Date()).getTime() + "'>")
+                    CuisineBehavior.find(".DishName").html(JSONData[dataKey]["DishName"])
+                    CuisineBehavior.find(".FoodIngredient").append(":&nbsp;&nbsp;")
+                    const json = {}
+                    for (let oj in JSONData[dataKey]["FoodIngredient"]) {
+                        oj = JSONData[dataKey]["FoodIngredient"][oj]
+                        const key = Object.keys(oj)[0]
+                        json[key] = oj[key]
+                    }
+                    JSONData[dataKey]["FoodIngredient"] = json
+                    for (var FoodIngredientKey in json) {
+                        CuisineBehavior.find(".FoodIngredient").append(FoodIngredientKey + ":" + json[FoodIngredientKey] + ",")
+                    }
+                    CuisineBehavior.find(".ExplainInDetail").html("简介:" + JSONData[dataKey]["ExplainInDetail"])
+                    CuisineBehavior.find(".Snowflake").html(JSONData[dataKey]["Snowflake"])
+                    CuisineBehavior.find(".Craft").html("做法:" + JSONData[dataKey]["Craft"])
+                    JSONData1[JSONData[dataKey]["Snowflake"]] = JSONData[dataKey]
+                }
+                sessionStorage.setItem("getCuisineJson", JSON.stringify(JSONData1))
+                UpdateButtonRenewal();
+                DeleteButtonRenewal()
+            }
+            //架构创建页面
+            function insertCuisineButtonRenewal() {
+
+                $(".newCuisine").mousedown(function () {
+                    var CuisineBehaviorg = inputModules()
+                    const CuisineBehavior = {Preview: "", DishName: "", ExplainInDetail: "", FoodIngredient: {},}
+                    CuisineBehaviorg.find(".Preview img").removeAttr("name").wrap(document.createElement("label")).parent("label").css("position", "relative").append(document.createElement("img")).find("img")
+                        .attr("src", "/static/img/CuisineImage/" + CuisineBehavior["Preview"] + ".jpg?Time=" + (new Date()).getTime()).css("position", "absolute").css("z-index", " 1").eq(1).attr({
+                        src: "/static/img/空白图.jpeg",
+                        id: "imgPreview"
+                    })
+                        .css("z-index", " 2").mouseenter(function (e) {
+                        $(this).animate({opacity: 0.8})
+                    }).mouseleave(function () {
+                        $(this).animate({opacity: 0.0})
+                    })
+                        .parent().attr("for", "UpImg").before(document.createElement("input")).parents(".Preview").find("img[src=\"/static/img/空白图.jpeg\"]").css({
+                        opacity: "0",
+                        position: "relative"
+                    })
+
+                    CuisineBehaviorg
+                        .find(".Preview input")
+                        .css("display", "none")
+                        .attr({
+                            accept: ".jpg",
+                            type: "file",
+                            id: "UpImg",
+                            name: "Preview",
+                            value: "/static/img/CuisineImage/" + CuisineBehavior["Preview"] + ".jpg"
+                        })
+                        .change(
+                            function () {
+                                for (const i of document.getElementById("UpImg").files) {
+                                    let cbdiv = CuisineBehaviorg
+                                        .find(".Preview img")
+                                    cbdiv.not(("img[src=\"/static/img/空白图.jpeg\"]"))
+                                        .attr("src", URL.createObjectURL(i))
+                                    if (cbdiv.parent().find("div").length <= 0) {
+                                        cbdiv.parent().append(document.createElement("div"))
+                                    }
+                                    cbdiv.parent()
+                                        .find("div")
+                                        .css("position", "relative")
+                                        .text("文件大小：" + returnFileSize(i.size))
+                                    $(".Preview").find("#UpImg").attr("value", URL.createObjectURL(i))
+                                }
+                            }
+                        )
+                    CuisineBehaviorg.find(".DishName input").attr("value", CuisineBehavior["DishName"])
+                    CuisineBehaviorg.find(".ExplainInDetail textarea").text(CuisineBehavior["ExplainInDetail"])
+                    CuisineBehaviorg.find(".Craft textarea").text(CuisineBehavior["Craft"])
+                    CuisineBehaviorg.find(".Snowflake").html($(this).parents(".CuisineBehavior").find(".Snowflake").text())
+                    for (var dataKey in CuisineBehavior["FoodIngredient"]) {
+                        CuisineBehaviorg.find(".FoodIngredient div").last().before("<div><input type='text' name='key' value='" + dataKey +
+                            "' >:<input type='text' name='value' value='" + CuisineBehavior["FoodIngredient"][dataKey] + "' ><span style='font-size: 1.5em;margin-left: 0.5em;'>-</span><br></div>")
+                    }
+                    CuisineBehaviorg.find(".order div").first().next().addBack().css("display", "none")
+                    CuisineBehaviorg.find(".order div").last().css("display", "block").mousedown(function () {
+                        insertCuisineUp()
+                        CuisineBehaviorg.find(".order div").last().css("display", "block").unbind()
+                    })
+                    $("#CuisineBehaviorH").html(CuisineBehaviorg.wrap("<div class='row CuisineBehavior'></div>"))
+                    $("#CuisineBehaviorH").find("span:contains('-')").mousedown(function () {
+                        $(this).parent("div").remove()
+                    })
+                })
+            }
+            //提交创建数据
+            function insertCuisineUp() {
+                let JsonCuisineBehavior = extractionFormData()
+                JsonCuisineBehavior["Preview"] = JsonCuisineBehavior["DishName"]
+                JsonCuisineBehavior["Snowflake"] = $("#01").text()
+                UpImgOfJSONData(JsonCuisineBehavior["Preview"].replace("/", ""),"/HTML/Cuisine/UpImgDate",JSON.stringify(JsonCuisineBehavior),"/Cuisine/Cuisine/insertCuisine")
+                UpFlush()
+            }
+            //更新按钮事件绑定
+            //由getCuisine（）调用
+            //待优化
+            function UpdateButtonRenewal() {
+                bd($(".order").find(".Update button"),function () {
+                    var CuisineBehaviorg = inputModules()
+                    const CuisineBehavior = JSON.parse(sessionStorage.getItem("getCuisineJson"))[$(this).parents(".CuisineBehavior").find(".Snowflake").text()]
+                    CuisineBehaviorg.find(".Preview img").removeAttr("name").wrap(document.createElement("label")).parent("label").css("position", "relative").append(document.createElement("img")).find("img")
+                        .attr("src", "/static/img/CuisineImage/" + CuisineBehavior["Preview"] + ".jpg?Time=" + (new Date()).getTime()).css("position", "absolute").css("z-index", " 1").eq(1).attr({
+                        src: "/static/img/空白图.jpeg",
+                        id: "imgPreview"
+                    })
+                        .css("z-index", " 2").mouseenter(function (e) {
+                        $(this).animate({opacity: 0.8})
+                    }).mouseleave(function () {
+                        $(this).animate({opacity: 0.0})
+                    })
+                        .parent().attr("for", "UpImg").before(document.createElement("input")).parents(".Preview").find("img[src=\"/static/img/空白图.jpeg\"]").css({
+                        opacity: "0",
+                        position: "relative"
+                    })
+
+                    CuisineBehaviorg
+                        .find(".Preview input")
+                        .css("display", "none")
+                        .attr({
+                            accept: ".jpg",
+                            type: "file",
+                            id: "UpImg",
+                            name: "Preview",
+                            value: "/static/img/CuisineImage/" + CuisineBehavior["Preview"] + ".jpg"
+                        })
+                        .change(
+                            function () {
+                                for (const i of document.getElementById("UpImg").files) {
+                                    let cbdiv = CuisineBehaviorg
+                                        .find(".Preview img")
+                                    cbdiv.not(("img[src=\"/static/img/空白图.jpeg\"]"))
+                                        .attr("src", URL.createObjectURL(i))
+                                    if (cbdiv.parent().find("div").length <= 0) {
+                                        cbdiv.parent().append(document.createElement("div"))
+                                    }
+                                    cbdiv.parent()
+                                        .find("div")
+                                        .css("position", "relative")
+                                        .text("文件大小：" + returnFileSize(i.size))
+                                    $(".Preview").find("#UpImg").attr("value", URL.createObjectURL(i))
+                                }
+                            }
+                        )
+                    CuisineBehaviorg.find(".DishName input").attr("value", CuisineBehavior["DishName"])
+                    CuisineBehaviorg.find(".ExplainInDetail textarea").text(CuisineBehavior["ExplainInDetail"])
+                    CuisineBehaviorg.find(".Craft textarea").text(CuisineBehavior["Craft"])
+                    CuisineBehaviorg.find(".Snowflake").html($(this).parents(".CuisineBehavior").find(".Snowflake").text())
+                    for (var dataKey in CuisineBehavior["FoodIngredient"]) {
+                        CuisineBehaviorg.find(".FoodIngredient div").last().before("<div><input type='text' name='key' value='" + dataKey +
+                            "' >:<input type='text' name='value' value='" + CuisineBehavior["FoodIngredient"][dataKey] + "' ><span style='font-size: 1.5em;margin-left: 0.5em;'>-</span><br></div>")
+                    }
+                    CuisineBehaviorg.find(".order div").first().next().addBack().css("display", "none")
+                    CuisineBehaviorg.find(".order div").last().css("display", "block").mousedown(function () {
+                        UpdateUp()
+                        CuisineBehaviorg.find(".order div").last().css("display", "block").unbind()
+                    })
+                    $("#CuisineBehaviorH").html(CuisineBehaviorg.wrap("<div class='row CuisineBehavior'></div>"))
+                    $("#CuisineBehaviorH").find("span:contains('-')").mousedown(function () {
+                        $(this).parent("div").remove()
+                    })
+                })
+            }
+            function UpdateUp() {
+                let js1;
+                let JsonCuisineBehavior = extractionFormData()
+                const CuisineBehavior = JSON.parse(sessionStorage.getItem("getCuisineJson"))[$(".CuisineBehavior .Snowflake").html()]
+                JsonCuisineBehavior["Preview"] = JsonCuisineBehavior["Preview"][JsonCuisineBehavior["Preview"].length - 1].split(".")[0]
+                JsonCuisineBehavior["Snowflake"] = $(".CuisineBehavior .Snowflake").html()
+                if (CuisineBehavior["Preview"] != JsonCuisineBehavior["Preview"]) {
+                    js1 = CuisineBehavior["Preview"]
+                    JsonCuisineBehavior["Preview"] = CuisineBehavior["Preview"]
+                }else {js1="NULL"}
+                UpImgOfJSONData(js1.replace("/", ""),"/HTML/Cuisine/UpImgDate",JSON.stringify(JsonCuisineBehavior),"/Cuisine/Cuisine/Update")
+                UpFlush()
+            }
+            function DeleteButtonRenewal() {
+                bd($(".order").find(".Delete button"),
+                    function () {
+                    const Snowflake = $(this).parents("#CuisineBehaviorH .CuisineBehavior").find(".Snowflake").text();
+                    let JsonCuisineBehavior = {"Snowflake": Snowflake, "DataID": $("#01").text()}
+                    DeleteajaxJSON("/Cuisine/Cuisine/Delete", "json", JSON.stringify(JsonCuisineBehavior), "application/json")
+                })
+            }
+            function bd(a,b) {
+                a.unbind()
+                a.mousedown(b)
+            }
+        </script>
+
+    </div>
+</div>
+</body>
+<script>
+    var liLtits = $(".list-group-item ul li")
+    $(document).ready(function () {
+        let len = (window.innerHeight - $("#navbar").innerHeight())
+        $("#shs").css("height", len.toString() + "px")
+        $(".list-group-item ul").hide();
+    })
+    $(".list-group-item div").mousedown(function () {
+        if ($(this).next().is(":hidden")) {
+            $(".list-group-item div").next().hide("slow")
+            $(this).next("ul").show("slow");
+        }
+    })
+    $(".list-group-item ul li").mousedown(function () {
+        var url_0 = "http://localhost:8090/ss/hha"
+        $.ajax({
+            url: url_0,//（1）请求的action路径,可以传递参数到后台
+            type: 'GET',
+            dataType: "json",
+            error: function () {
+                $("#details").html('请求失败 ');
+            },
+            success: function (data) {
+                $("#details").html(data['001']);
+            }
+        });
+
+    })
+    function ajaxJSON(url, Type, dataType, jsonData, contentType) {
+        let jsonDataLet
+        $.ajax({
+            // "http://localhost:8090/Cuisine/cuisine/delete",//（1）请求的action路径,可以传递参数到后台
+            url: "http://localhost:8090" + url,
+            type: Type,
+            dataType: dataType,
+            data: jsonData,
+            contentType: contentType,
+            async: false,
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("服务异常：数据获取异常，请检查报告id。");
+                console.log(XMLHttpRequest.status);
+                console.log(XMLHttpRequest.readyState);
+                console.log(textStatus);
+            },
+            complete: function (data,status) {
+                jsonDataLet = data.responseJSON
+            }
+        })
+        return jsonDataLet
+    }
+</script>
+</html>

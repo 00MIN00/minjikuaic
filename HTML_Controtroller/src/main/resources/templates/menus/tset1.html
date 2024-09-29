@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="../../static/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+<div class=".row">
+    <div id="01" class="col-12">
+        <div id="side-menu"style="float: right;height: max-content;width: 0.1vw;max-width: 50vw;min-width: 0vw;background-color: rgba(50,50,50,0.5)">
+            <ul>
+                <li><a href="/">Main</a><span class="icon"></span></li>
+                <li><a href="/page-2/">Page 2</a><span class="icon"></span></li>
+                <li><a href="/page-3/">Page 3</a><span class="icon"></span></li>
+                <li><a href="/page-4/">Page 4</a><span class="icon"></span></li>
+            </ul>
+        </div>
+    </div>
+    <div id="02" class="">
+        <div style="float: right;height: max-content;width: 0.1vw;max-width: 50vw;min-width: 0vw;background-color: rgba(50,250,50,0.5)">
+            <ul>
+                <li><a href="/">Main</a><span class="icon"></span></li>
+                <li><a href="/page-2/">Page 2</a><span class="icon"></span></li>
+                <li><a href="/page-3/">Page 3</a><span class="icon"></span></li>
+                <li><a href="/page-4/">Page 4</a><span class="icon"></span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="/static/js/util/AjaxUtil.js" type="text/javascript" rel="script"></script>
+<div><button type="button" id="010">001</button> </div>
+<div><span id="a01">211</span></div>
+
+<div><span id="a02">2ss11</span></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    })
+    $("#010").mousedown(function () {
+        $("#a01").text("001")
+    })
+    $("#a01").bind("DOMNodeInserted",
+        function () {
+            $("#a02").text("as")
+        }
+    )
+</script>
+</body>
+<script type="application/javascript" src="/static/js/jquery-3.7.1.min.js"></script>
+</html>

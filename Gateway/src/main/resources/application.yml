@@ -1,0 +1,82 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: geyeway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.3.2:8848
+      config:
+        namespace: ""
+        name: Geyeway
+        group: DEFAULT_GROUP
+        server-addr: 192.168.3.2:8848
+        file-extension: yml
+        enabled: false
+    sentinel:
+      transport:
+        dashboard: 192.168.3.2:8849
+      datasource:
+        geyeway:
+          nacos:
+            server-addr: 192.168.3.2:8848
+            data-id: nacosTest1
+            group-id: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
+      enabled: true
+      eager: true
+    loadbalancer:
+      cache:
+        ttl: 10s
+        capacity: 16
+    gateway:
+      globalcors:
+        cors-configurations:
+          # 仅在开发环境设置为*
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+      routes:
+        - id: nacosTest1
+          uri: lb://nacosTest1/
+          predicates:
+            - Path=/echo/**
+        - id:
+            HTML_Controtroller
+          uri:
+            lb://HTML-Controtroller/
+          predicates:
+            - Path=/HTML/**
+          filters:
+            - StripPrefix=1
+        - id:
+            Cuisine_Controtroller
+          uri:
+            lb://Cuisine-Controtroller/
+          predicates:
+            - Path=/Cuisine/**
+          filters:
+            - StripPrefix=1
+        - id:
+            MySQL_Controtroller
+          uri:
+            lb://MySQL-Controtroller/
+          predicates:
+            - Path=/MySQL/**
+          filters:
+            - StripPrefix=1
+        - id:
+            TXET
+          uri:
+            lb://TXET/
+          predicates:
+            - Path=/TXET/**
+          filters:
+            - StripPrefix=1
+logging:
+  level:
+    com.example.seata_demo1: debug
+debug: true

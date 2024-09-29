@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>铭记餐厅</title>
+</head>
+<script src="../../static/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+<link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+<script src="../../static/js/bootstrap.min.js"></script>
+<style>
+    ul li {
+        list-style: none;
+        font-size: clamp(0.5rem, 2.6vw, 3rem);
+    }
+
+    #pd-list ul li {
+        font-size: 1.5vw;
+        color: rgb(255, 255, 255);
+    }
+
+    #pd-list ul li ul {
+        /*display: none;*/
+        padding-left: 0px;
+    }
+
+    #pd-list ul li ul li {
+        padding-left: 12px;
+    }
+
+    #shs {
+        width: 10vw;
+    }
+
+    .FoodIngredient input {
+        width: auto;
+        max-width: content-box;
+        height: 1vw;
+    }
+
+    #ZOrderfood {
+        flex-wrap: wrap;
+        display: flex;
+        padding-top: 10px;
+        padding-inline: 10px;
+        border-radius: 16px;
+        border-width: 1px;
+        background-color: rgba(0, 0, 0, 0.1);
+        border-style: hidden;
+        border-top-style: hidden;
+        max-height: 94%;
+        min-height: 12vh;
+        height: max-content;
+        padding-bottom: 10px;
+    }
+
+    .seat {
+        width: 12vw;
+        height: 12vh;
+        background-color: rgba(100, 100, 100, 0.5);
+        border-radius: 10px;
+        margin-inline: 5px;
+        margin-bottom: 10px;
+        float: left;
+        display: grid;
+        align-content: center;
+        justify-content: center;
+        user-select: none;
+    }
+
+    #upOrderfood {
+        height: 6%;
+        width: 100%;
+        display: flex;
+        align-items: end;
+        justify-content: start;
+        padding-inline: 2vw;
+    }
+
+    #upOrderfood > div > span {
+        word-break: break-all;
+        display: inline-block;
+        width: auto;
+        white-space: normal;
+        max-width: 100%;
+    }
+
+    #upOrderfood > div {
+        display: grid;
+        max-width: 10%;
+        width: max-content;
+        min-width: 6vw;
+        max-width: 10%;
+        height: max-content;
+        min-height: 3vh;
+        max-height: 100%;
+        padding-inline: 1vw;
+        padding-block: 10px;
+        align-items: center;
+        justify-items: center;
+        background-color: rgba(100, 100, 100, 0.5);
+        border-style: hidden;
+        border-radius: 12px;
+        border-color: rgba(0, 0, 0, 0.1);
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    #shoppingCart {
+        width: max-content;
+        padding-block: 10px;
+        right: 0px;
+        display: none;
+        max-height: 820px;
+
+    }
+
+    #shoppingCart > div {
+        justify-items: center;
+        align-self: center;
+        user-select: none;
+    }
+
+    #shoppingCart > div:nth-child(1) {
+        width: 2.5vw;
+        height: 10vh;
+        background-color: rgba(0, 0, 0, 0.2);
+        border-bottom-left-radius: 1em;
+        border-top-left-radius: 1em;
+        user-select: none;
+        writing-mode: vertical-lr;
+        text-orientation: upright;
+        align-self: center;
+        justify-items: center;
+        display: grid;
+        user-select: none;
+    }
+
+    #shoppingCart > div:nth-child(2) {
+        width: 20vw;
+        height: 103%;
+        background-color: rgba(0, 0, 0, 0.2);
+        padding-inline: 0.2vw;
+        padding-block: 0.2vh
+    }
+
+    .seatCart {
+        width: 100%;
+        height: max-content;
+        background-color: rgba(100, 100, 100, 0.5);
+        display: flex;
+        align-content: start;
+        justify-content: start;
+        user-select: none;
+        padding-block: 0.2vh;
+        padding-inline: 0.5vw;
+    }
+
+    .seatCart span {
+        width: 33.33%;
+        font-size: 33%;
+    }
+
+    #shoppingCartUser, #SCZD {
+        display: grid;
+        padding: 3px;
+        background-color: rgba(100, 100, 100, 0.6);
+        height: max-content;
+    }
+
+    #shoppingCartUser span {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        justify-self: start;
+        align-self: start;
+        font-size: 1.1vw;
+    }
+
+    #SCZD {
+        display: grid;
+        align-self: end;
+    }
+
+    #SCZD > div {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #SCZD > div > span {
+        margin-left: 0.5vw;
+        width: 4vw;
+        font-size: 1vw;
+    }
+
+    #SCZD > div > button {
+        font-size: 1.2vw;
+        max-width: 30%;
+        width: max-content;
+        padding-inline: 0.5vw;
+    }
+
+    #SCOF {
+        overflow-y: auto;
+    }
+
+    #SCOF > div {
+        display: flex;
+        height: max-content;
+        width: 100%;
+        margin-top: 0.5vw;
+    }
+
+    #SCOF > div > span {
+        height: max-content;
+        width: 45%;
+        justify-self: start;
+        align-self: start;
+    }
+</style>
+<body style="height: 100%">
+<!-- 小屏幕上水平导航栏会切换为垂直的 -->
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark" id="navbar" style="height: 100px;">
+    <img src="/static/img/铭记快餐.png">
+</nav>
+<div class="container-fluid row" id="container-fluid-height " style="padding: 0px 0px 0px 0px;height: max-content">
+
+    <div class="col-2" id="shs" style="padding:0px 0px 0px 0px ;height: 100%;background-color:rgba(49,49,49,100)">
+        <div class="pt-1 px-0" id="pd-list">
+            <ul class="list-group  list-group-flush">
+                <li class="list-group-item bg-transparent">
+                    <div><a>菜单管理</a></div>
+                    <ul id="cuisine" style="display: none">
+                        <li>
+                            <a>菜品管理</a>
+                        </li>
+                        <li>
+                            <a>种类管理</a>
+                        </li>
+                        <li>
+                            <a>用户点餐</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-group-item bg-transparent">
+
+                    <div><a>人事管理</a></div>
+                    <ul>
+                        <li>
+                            <a>员工管理</a>
+                        </li>
+                        <li>
+                            <a>薪酬管理</a>
+                        </li>
+                        <li>
+                            <a>出勤管理</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-group-item bg-transparent">
+
+                    <div><a>采购管理</a></div>
+                    <ul>
+                        <li>
+                            <a>公司配送</a>
+                        </li>
+                        <li>
+                            <a>自行采购</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-group-item bg-transparent">
+
+                    <div><a>仓储管理</a></div>
+                    <ul>
+                        <li>
+                            <a>耗材管理</a>
+                        </li>
+                        <li>
+                            <a>报废处理记录</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-group-item bg-transparent">
+
+                    <div><a>财务管理</a></div>
+                    <ul>
+                        <li>
+                            <a>财务统计</a>
+                        </li>
+                        <li>
+                            <a>财务登记</a>
+                        </li>
+                        <li>
+                            <a>财务核验</a>
+                        </li>
+                        <li>
+                            <a style="font-size: 1.5vw">供应商及厨余处理</br>资质登记</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-group-item bg-transparent">
+
+                    <div><a>会员管理</a></div>
+                    <ul>
+                        <li>
+                            <a>会员管理</a>
+                        </li>
+                        <li>
+                            <a>会员积分</a>
+                        </li>
+                        <li>
+                            <a>积分商城</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="col" id="details" style="">
+        <link href="../../static/css/menus/cuisine.min.css" rel="stylesheet">
+        <script rel="stylesheet" src="../../static/jquery-ui-1.13.2/jquery-ui.min.js" type="text/javascript"></script>
+        <script rel="stylesheet" src="../../static/js/util/AjaxUtil.js" type="text/javascript"></script>
+        <script rel="stylesheet" src="/static/js/util/eUtil.js" type="text/javascript"></script>
+        <script rel="stylesheet" src="/static/js/util/ObjectClassMap.js" type="text/javascript"></script>
+        <div style="height: 100%;width: 100%;padding-block: 10px;">
+            <div id="upOrderfood">
+                <div>
+                    <span>返回</span>
+                </div>
+                <div>
+                    <span>上一页</span>
+                </div>
+                <div style="margin-left: auto;">
+                    <span>下一页</span>
+                </div>
+            </div>
+            <div id="ZOrderfood">
+            </div>
+            <div id="shoppingCart" style=" position: absolute;">
+                <div><span>订单</span></div>
+                <div style="display: none;">
+                    <div style="width: 100%;height: 100%;border: solid rgba(0,0,0,0.3) 2px;background-color: rgba(255,255,255,0.6);display: grid">
+                        <div>
+                            <div id="shoppingCartUser">
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <div id="SCOF">
+                            </div>
+                        </div>
+                        <div id="SCZD">
+                            <div><span>合计：</span><span id="total"></span><span>应付：</span><span id="receivable"></span>
+                            </div>
+                            <div><span>付款：</span><span id="payment"></span><span>找零：</span><span id="change"></span>
+                            </div>
+                            <div>
+                                <button TYPE="button" id="USER" style="margin: 0.5vw;width: 95%;max-width: 100%">会员登录</button>
+                            </div>
+                            <div>
+                                <button TYPE="button" id="TJ">提交</button>
+                                <button TYPE="button" id="JS">结算</button>
+                                <button TYPE="button" id="ZK">折扣</button><!--- -->
+                                <button TYPE="button" id="YHQ">优惠券</button><!--- 替换-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="modules" style="display: none;width:100%">
+            <div class="seat">
+                <span></span>
+            </div>
+            <dialog id="favDialog">
+                <form method="dialog">
+                    <p>输入折扣
+                    </p>
+                    <input id="ZKV" pattern="输入折扣" style="width: 6vw;height: 2vh;" value="10.0">
+                    <div>
+                        <button id="T1">确定</button>
+                        <button id="F1">取消</button>
+                    </div>
+                </form>
+            </dialog>
+        </div>
+        <div id="ss">
+        </div>
+        <script type="text/javascript">
+            //页面初始化
+            $(document).ready(function () {
+                const map = {};
+                map["ss"] = "aaaa"
+                let k = {};
+                k["page"] = 0
+                $("#shoppingCart").css({
+                    top: document.getElementById("details").getElementsByTagName("div").item(0).offsetTop + "px",
+                    height: pxOutvh10($("#details div").eq(0).height()) + "vh"
+                })
+                getData("/Orderfood/selectAllOrderfood", k, OrderFoodbj)
+                //和获取订单数据存储到本地
+                const SnowflakeLits = $("#ZOrderfood .seat");
+                for (const snowflakeE of SnowflakeLits) {
+                    let Orderfoodobj = new Orderfood(GetajaxJSON("/Cuisine/Orderfood/selectOrderfood",
+                        "json",{
+                            "page": 0,
+                            Snowflake: $(snowflakeE).attr("Snowflake")
+                        } , "application/json"));
+                    localStorage.setItem($(snowflakeE).attr("Snowflake"),JSON.stringify(Orderfoodobj))
+                }
+                let hashMap = new Map();
+                for (let obj of GetajaxJSON("/Cuisine/Cuisine/selectAllCuisine", "json", {QueryWrapper: ["Snowflake", "DishName", "Price"]}, "application/json")["cuisineLits"]) {
+                    hashMap.set(obj.Snowflake, obj)
+                };
+                localStorage.setItem("hashMap",JSON.stringify(Object.fromEntries(hashMap)));
+            })
+
+            //加载面板
+            function getData(url, getData, fun) {
+                const TagData = (GetajaxJSON("/Cuisine" + url, "json", getData, "application/json"));
+                $("#ZOrderfood").html("")
+                let traverse = url=="/Orderfood/selectAllOrderfood"?OrderfoodLits(TagData.OrderfoodLits):CuisineLits(TagData.CuisineLits);
+                let ID = 0;
+                for (const tagDatoj of traverse) {
+                    const obj = $("#ZOrderfood").append(newE("div")).find("div:not(div[class=seat])")
+                        .addClass("seat").attr({"Snowflake": tagDatoj.Snowflake});
+                    ID = ID + 1
+                    fun(obj, tagDatoj, ID)
+                }
+                const keys = {0: true, 1: true, 2: true}
+                const pageN = parseInt(TagData["pageN"])
+                const TagLits = $("#upOrderfood div");
+                keys[0] = url == "/Orderfood/selectAllOrderfood";
+                keys[1] = pageN <= 1;
+                keys[2] = parseInt(TagData["pageZ"]) >= pageN;
+                for (const key of Object.keys(keys)) {
+                    if (keys[key]) {
+                        TagLits.eq(key).css({display: "none"})
+                    } else {
+                        TagLits.eq(key).css({display: ""})
+                    }
+                }
+                $("#upOrderfood").attr({
+                    pageZ: TagData["pageZ"],
+                    page: TagData["pageN"],
+                    Snowflake: "Snowflake" in getData ? getData.Snowflake : ""
+                })
+                cuisineButton()
+            }
+            //面板按钮
+            function cuisineButton() {
+                const fun = $("#upOrderfood div:nth-child(1)").find("span").css("display") != "block" ? Cuisinebj : OrderFoodbj;
+                bd($(".seat"), function () {
+                    if (fun == Cuisinebj) {
+                        getData("/Orderfood/selectCuisine", {
+                            "page": String($("#upOrderfood").attr("page")),
+                            Snowflake: $(this).attr("snowflake")
+                        }, fun)
+                        $("#shoppingCart").css("display", "flex")
+                    } else {
+                        if ($("#SCOF").height() < 800) {
+                            $("#SCOF").height(pxOutvh10($("#SCOF").parent("div").parent("div").height() - $("#SCZD").height() - $("#shoppingCartUser").height()) + "vh");
+                        }
+                        if ($("#SCOF").height() < 10) {$("#SCOF").height("30vh");};
+                        let cuisine = new Cuisine();
+                        cuisine.Snowflake = ($(this).attr("snowflake"));
+                        cuisine.DishName = ($(this).find("span").text());
+                        cuisine.Price = ($(this).attr("price"));
+                        $("#SCOF").attr("key", "NAN")
+                        let divobj = $("#SCOF").append(newE("div")).find("div").eq(-1).attr({"Snowflake": cuisine.Snowflake});
+                        divobj.append(newE("span")).find("span").eq(-1).text(cuisine.DishName);
+                        divobj.append(newE("span")).find("span").eq(-1).text(cuisine.Price);
+                        divobj.append(newE("span")).find("span").eq(-1).text("X").css("width", "10%").addClass("OFC");
+                        bd($(".OFC"), function () {$(this).parent("div").remove();refreshTotal();})
+                        refreshTotal();
+                    }
+                })
+                bd($("#upOrderfood div"), function () {
+                    let str1 = $(this).find("span").text()
+                    let pageN
+                    switch (str1) {
+                        case "上一页":
+                            pageN = parseInt($("#upOrderfood").attr("page")) - 1;
+                            getData("/Orderfood/selectCuisine", {"pageN": pageN}, fun)
+                            break;
+                        case "下一页":
+                            pageN = parseInt($("#upOrderfood").attr("page")) + 1;
+                            getData("/Orderfood/selectCuisine", {"pageN": pageN}, fun)
+                            break;
+                        case "返回":
+                            if ($("#SCOF").attr("key") == "NAN") {
+                                if (confirm("订单未提交退出不保存")){$("#SCOF").attr("key", null);}else {return null;}
+                                };
+                            $("#shoppingCart>div:nth-child(2)").css("display", "none");
+                            $("#SCOF").html("");
+                            getData("/Orderfood/selectAllOrderfood", {"pageN": pageN}, fun);
+                            $("#shoppingCart").css("display", "none");
+                    }
+                })
+                //{0: "空置", 1: "已预约", 2: "未点餐", 3: "未上完菜", 4: "未结账"}
+                bd($("#TJ"), function () {
+                    const orderfood = JSON.parse(localStorage.getItem($("#upOrderfood").attr("Snowflake")));
+                    orderfood.TimeToOrder==null ||orderfood.TimeToOrder<new Date("2024-01-01 00:00:00")?orderfood.TimeToOrder = getLoalDate():null
+                    orderfood.state<2?orderfood.state=3:null;
+                    orderfood.total = $("#total").text()
+                    orderfood.receivable = $("#receivable").text()
+                    orderfood.discount = $("#ZK").attr("discount")
+                    let keylits = [];
+                    for (const obj of $("#SCOF>div")) {
+                        keylits.push($(obj).attr("snowflake"))
+                    }
+                    orderfood.KeyList = keylits
+
+                    localStorage.setItem(orderfood.Snowflake, JSON.stringify(orderfood))
+                    PutajaxJSON("/Cuisine/Orderfood/UpdateOrderfood", "json", orderfood, "application/json")==200?
+                    $("#SCOF").attr("key",""):null;
+                    // 数据提交
+                })
+                bd($("#JS"), function () {
+                    console.log("结算功能未开发完成")
+                    const Orderfoodfar = new Orderfood(GetajaxJSON("/Cuisine/Orderfood/selectOrderfood", "json", {Snowflake: $("#upOrderfood").attr("Snowflake")}, "application/json"));
+                    const Orderfoodthis = new Orderfood(JSON.parse(localStorage.getItem("orderfood")));
+                    Orderfoodfar.KeyList=Orderfoodfar.KeyList==null?[]:Orderfoodfar.KeyList;
+                    Orderfoodthis.KeyList=Orderfoodthis.KeyList==null?[]:Orderfoodthis.KeyList;
+                    if (Orderfoodfar.KeyList.length != Orderfoodthis.KeyList.length) {
+                        alert("当前订单未提交");
+                        return null;
+                    }
+                    let  orderfood = JSON.parse(localStorage.getItem($("#upOrderfood").attr("Snowflake")));
+
+                    //    将订单提交到会员系统查询零钱余额;
+                    //     let = PostajaxJSON("/xxx/xxx/insertOrderfood", "json", json, "application/json")
+                    //
+                    // orderfood.receivable = $("#receivable").text()
+                    orderfood.payment =  prompt("支付金额");
+                    if (orderfood.payment==null){
+                        console.log("发起网络支付。。财务系统开发中。。")
+                        //    将订单提交到财务系统发起
+                        //     let = PostajaxJSON("/xxx/xxx/insertOrderfood", "json", json, "application/json")
+                            }
+                    orderfood.change = orderfood.payment-orderfood.receivable;
+                    orderfood.integral = parseInt(orderfood.receivable);
+                //    优惠卷采集
+                    //    将订单提交到订单系统存储
+                    //     let = PostajaxJSON("/xxx/xxx/insertOrderfood", "json", json, "application/json")
+                    //    将订单提交到会员系统存入积分，零钱;
+                    //     let = PostajaxJSON("/xxx/xxx/insertOrderfood", "json", json, "application/json")
+                    setTimeout(function () {
+                        let orderfood1 = new Orderfood();
+                        orderfood1.Snowflake = orderfood.Snowflake;
+                        orderfood1.userSnowflake = "1778725331032116200";
+                        orderfood1.userName = "非会员"
+                        PostajaxJSON("/Cuisine/Orderfood/insertOrderfood", "json", JSON.stringify(orderfood), "application/json")
+                    },10)
+                    $("#shoppingCart>div:nth-child(2)").css("display", "none");
+                    $("#SCOF").html("");
+                    getData("/Orderfood/selectAllOrderfood", {"pageN": pageN}, fun);
+                    $("#shoppingCart").css("display", "none");
+
+                })
+                bd($("#ZK"), function () {
+                    let ZK = prompt("输入折扣");
+                    let zjInt = 0;
+                    if (ZK.indexOf() == -1) {
+                        ZK = parseFloat(ZK) * 0.1
+                    } else {
+                        ZK = parseFloat(ZK.replace("折", "").trim()) * 0.1;
+                    };
+                    $("#ZK").attr({"discount": ZK.toFixed(3)});
+                    const divobj = $("#SCOF").find("div").find("span:nth-child(2)").text();
+                    console.log(divobj)
+                    for (const divobjElement of divobj) {
+                        zjInt = zjInt + parseFloat(divobjElement);
+                    }
+                    $("#receivable").text(parseFloat(parseFloat($("#total").text()) * ZK).toFixed(2))
+                    $("#SCOF").attr("key", "NAN")
+                })
+                bd($("#YHQ"), function () {
+                    //这里请求优惠卷系统并把获得的Flosat存入订单系统的discount
+                    //优惠卷系统开发中
+                    console.log("ss")
+                    if ($("#SCOF div").css("display") != "none") {
+                        +
+                            $("#SCOF div").css({display: "none"});
+                    } else {
+                        $("#SCOF div").css({display: "block"});
+                    }
+                })
+                bd($("#USER"), function () {
+                    //这里请求优惠卷系统并把获得的Flosat存入订单系统的discount
+                    //会员系统开发中
+                    let Uid = prompt("输入会员账号/手机号");
+                    if (Uid.length>12){
+                        $("#shoppingCartUser").find("span").eq(0).text("会员名：" +  "会员系统开发中未获取名称");
+                        $("#shoppingCartUser").find("span").eq(1).text("会员账号：" + Uid);
+                    }else {
+                        console.log(  "会员系统开发中未获取");
+                    }
+
+                })
+            }
+
+            function Cuisinebj(obj, tagDatoj, ID) {
+                obj.append(newE("span")).find("span").text(tagDatoj.DishName);
+                obj.attr({Snowflake: tagDatoj.Snowflake, Price: tagDatoj.Price})
+            }
+            function OrderFoodbj(obj, tagDatoj, ID) {
+                obj.attr("userSnowflake", tagDatoj.userSnowflake)
+                obj.append(newE("span")).find("span").text(ID + "号桌");
+                tagDatoj.userName != null?obj.append(newE("span")).find("span").eq(1).text(tagDatoj.userName):obj.append(newE("span")).find("span").eq(1).text("错误");
+                obj.append(newE("span")).find("span").eq(2).text( {0: "空置", 1: "已预约", 2: "未点餐", 3: "未上完菜", 4: "未结账"}[tagDatoj.state]);
+                obj.find("span").css({dis: "block", "justify-self": "center"})
+            }
+            $("#total").bind("DOMNodeInserted",function () {
+                $("#receivable").
+                text(parseFloat(
+                    parseFloat(
+                        parseFloat($("#total").text()*($("#ZK").attr("discount"))).toFixed(2)
+                    )).toFixed(2))
+            })
+            $("#ZOrderfood").bind("DOMNodeInserted",function (){
+                if ($("#upOrderfood").attr("Snowflake")==""){
+                    bd($("#shoppingCart>div:nth-child(1)"), function () {
+                        $("#shoppingCart>div:nth-child(2)").toggle("normal")
+                        const OrderfoodObject = new Orderfood(JSON.parse(localStorage.getItem($("#upOrderfood").attr("Snowflake"))))
+                        const hashMap = JSONOutMap(JSON.parse(localStorage.getItem("hashMap")))
+                        $("#shoppingCartUser").find("span").eq(0).text("会员名：" + OrderfoodObject.userName)
+                        $("#shoppingCartUser").find("span").eq(1).text("会员账号：" + OrderfoodObject.userSnowflake)
+                        $("#SCOF").css("display", "block")
+                        {   let zjInt = 0;
+                            let Cuisineselect = OrderfoodObject.KeyList;
+                            if (Cuisineselect != null) {
+                                for (const cE of Cuisineselect) {
+                                    console.log(typeof cE)
+                                    const divobj = $("#SCOF").append(newE("div")).find("div").eq(-1).attr({Snowflake: cE});
+                                    divobj.append(newE("span")).find("span").eq(-1).text(hashMap.get(cE).DishName);
+                                    divobj.append(newE("span")).find("span").eq(-1).text(hashMap.get(cE).Price);
+                                    divobj.append(newE("span")).find("span").eq(-1).text("X").css("width", "10%").addClass("OFC");
+                                    zjInt = zjInt + parseFloat(hashMap.get(cE).Price);
+                                }
+                                bd($(".OFC"), function () {$(this).parent("div").remove();refreshTotal();})
+                                refreshTotal();
+                            }
+                            OrderfoodObject.total != null && OrderfoodObject.total != 0?$("#total").text(OrderfoodObject.total):$("#total").text(zjInt);
+                            $("#ZK").attr("discount",1.000)
+                            const receivable = $("#receivable");
+                            switch (true) {
+                                case OrderfoodObject.discount != null && OrderfoodObject.discount != 0:$("#ZK").attr("discount",OrderfoodObject.discount);break;
+                                case OrderfoodObject.receivable != null && OrderfoodObject.receivable != 0:receivable.text(OrderfoodObject.receivable);break;
+                                case OrderfoodObject.total != null && OrderfoodObject.total != 0:receivable.text(OrderfoodObject.total);break;
+                                default:receivable.text(zjInt);refreshTotal();break;
+                            }
+                        }//购物车架构显示
+                    });
+                }else {$("#shoppingCart>div:nth-child(1)").unbind()}
+            });
+            function refreshTotal() {
+                let zjInt=0;
+                for (const SCOFElement of $("#SCOF>div>span:nth-child(2)")) {
+                    zjInt = zjInt + parseFloat($(SCOFElement).text());
+                }
+                $("#total").text(parseFloat(parseFloat(zjInt.toFixed(2))).toFixed(2));
+            }
+        </script>
+    </div>
+</div>
+</body>
+<script>
+    var liLtits = $(".list-group-item ul li")
+    $(document).ready(function () {
+        let len = (window.innerHeight - $("#navbar").innerHeight())
+        $("#shs").css("height", len.toString() + "px")
+        $(".list-group-item ul").hide();
+    })
+    $(".list-group-item div").mousedown(function () {
+        if ($(this).next().is(":hidden")) {
+            $(".list-group-item div").next().hide("slow")
+            $(this).next("ul").show("slow");
+        }
+    })
+    $(".list-group-item ul li").mousedown(function () {
+        var url_0 = "http://localhost:8090/ss/hha"
+        $.ajax({
+            url: url_0,//（1）请求的action路径,可以传递参数到后台
+            type: 'GET',
+            dataType: "json",
+            error: function () {
+                $("#details").html('请求失败 ');
+            },
+            success: function (data) {
+                $("#details").html(data['001']);
+            }
+        });
+
+    })
+
+    function ajaxJSON(url, Type, dataType, jsonData, contentType) {
+        let jsonDataLet
+        $.ajax({
+            // "http://localhost:8090/Cuisine/cuisine/delete",//（1）请求的action路径,可以传递参数到后台
+            url: "http://localhost:8090" + url,
+            type: Type,
+            dataType: dataType,
+            data: jsonData,
+            contentType: contentType,
+            async: false,
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("服务异常：数据获取异常，请检查报告id。");
+                console.log(XMLHttpRequest.status);
+                console.log(XMLHttpRequest.readyState);
+                console.log(textStatus);
+            },
+            complete: function (data, status) {
+                jsonDataLet = data.responseJSON
+            }
+        })
+        return jsonDataLet
+    }
+</script>
+</html>

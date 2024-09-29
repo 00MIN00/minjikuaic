@@ -1,0 +1,39 @@
+server:
+  port: 8089
+spring:
+  application:
+    name: HTML-Controtroller
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.3.2:8848
+      config:
+        namespace: ""
+        name: Geyeway
+        group: DEFAULT_GROUP
+        server-addr: 192.168.3.2:8848
+        file-extension: yml
+        enabled: false
+    sentinel:
+      transport:
+        dashboard: 192.168.3.2:8849
+      eager: true
+      log:
+        switch-pid: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+#        开启安全验证需要账户和密码
+#        username: root
+#        password: root
+#logging:
+#  level:
+#    root: debug
+#debug: true
+path:
+  resources: D:/projct3/DPGLXT/HTML_Controtroller/src/main/resources
+logging:
+  level:
+    root: fatal
+debug: true

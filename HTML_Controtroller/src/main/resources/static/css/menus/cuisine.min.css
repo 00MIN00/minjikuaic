@@ -1,0 +1,11 @@
+
+#p div,#p p{
+    font-size: 0.55vw;
+    float: left;
+}
+#p div{
+    margin: 0.2vw;
+}
+#p p{margin-top: 0;
+    margin-right: 0.1vw;}
+#SpeciesZoning{width:80vm;height:auto;background-color:#efefef;padding:10vm 10vm 10vm 10vm}.SpeciesFont{margin:2px 0px 2px 2px;padding:0px 6px 0px 6px;width:auto;font-size:clamp(0.1em,0.8em,3em);border:medium}.SpeciesFontFG{width:auto;padding:0px 1px 0px 1px;font-size:clamp(0.1vm,0.1vm,3vm)}button{border-style:solid;background:#209bfa;border-color:transparent;color:#fff;border-radius:3px;padding:0 20px;height:32px;font-size:14px;border-width:1px}#queryCuisine div,#queryCuisine div div div{margin-left:auto}#queryCuisine div:nth-child(1){margin-left:8px}#queryCuisine div div span{margin-right:12px;margin-left:12px}#order div button{}.CuisineBehaviorT div,.order div,.CuisineBehavior>div{background-color:#f5f5f5;border:1px solid #e6e6e6}.order div,.CuisineBehavior div{background-color:#ffffff}.order div button{display:block;margin:25%  auto}.Preview img{margin:5%;max-width:10vw;max-height:30vw}.DishName{font-size:1.2em;margin:3px auto}.FoodIngredient,.ExplainInDetail,.Craft{font-size:0.8em;margin:3px auto}
